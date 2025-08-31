@@ -59,8 +59,9 @@ async def login_and_scrape(page):
         timeout=50000,                     # wait up to 60s
         wait_until="domcontentloaded"      # stop waiting once DOM is ready
     )
-    await page.wait_for_load_state("networkidle")
     print("after login page opened...")
+    await page.wait_for_timeout(5000)
+    print("starting pan and password adding...")
     # Fill PAN and Password fields
     await page.wait_for_selector("input[type='text'][maxlength='10']", timeout=20000)
     await page.fill("input[type='text'][maxlength='10']", MHADA_PAN)
