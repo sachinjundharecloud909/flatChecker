@@ -5,7 +5,7 @@ from email.mime.multipart import MIMEMultipart
 import asyncio
 
 # ------------------ CONFIG ------------------
-MHADA_USERNAME = "BFBPJ6615K"
+MHADA_PAN = "BFBPJ6615K"
 MHADA_PASSWORD = "Kisan@9860"
 EMAIL_FROM = "sachinjundharecloud909@gmail.com"
 EMAIL_FROM_APP_PASSWORD = "Cloud@7878"  # ⚠️ Use Gmail App Password
@@ -41,7 +41,6 @@ def send_email_alert(new_items):
 
 # ---- Parse scheme list ----
 def parse_scheme_list(page_content):
-    # Example: match scheme names from HTML
     return re.findall(r"PB_01_01[^<]+", page_content)
 
 
@@ -53,14 +52,15 @@ def detect_new_items(old_list, new_list):
 # ---- Login & Scrape ----
 async def login_and_scrape(page):
     print("🌐 Opening login page...")
-    await page.goto(LOGIN_URL, timeout=60000)
+    await page.goto(LOGIN_URL, timeout=10000)
 
-    # Wait and fill
-    await page.wait_for_selector("#username", timeout=60000)
-    await page.fill("#username", MHADA_USERNAME)
-    await page.fill("#password", MHADA_PASSWORD)
+    # Wait and fill PAN + Password
+    await page.wait_for_selector("input[formcontrolname='pan']", timeout=10000)
+    await page.fill("input[formcontrolname='pan']", MHADA_PAN)
+    await page.fill("input[formcontrolname='password']", MHADA_PASSWORD)
 
-    await page.click("button[type='submit']")
+    # Click Login
+    await page.click("button:has-text('Login')")
     print("🔑 Submitted login form.")
 
     # Give time for navigation
@@ -68,8 +68,8 @@ async def login_and_scrape(page):
 
     # TODO: Adjust navigation clicks as per actual site flow
     try:
-        await page.click("text=Pune", timeout=10000)
-        await page.click("text=PB_01_01 FCFS 20 percent Schemes", timeout=10000)
+        await page.click("text=Pune", timeout=1000)
+        await page.click("text=PB_01_01 FCFS 20 percent Schemes", timeout=1000)
     except TimeoutError:
         print("⚠️ Could not navigate to Pune/target scheme.")
 
