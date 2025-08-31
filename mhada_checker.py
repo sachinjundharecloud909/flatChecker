@@ -5,8 +5,8 @@ from email.mime.multipart import MIMEMultipart
 import asyncio
 
 # ------------------ CONFIG ------------------
-MHADA_PAN = "BFBPJ6615K"
-MHADA_PASSWORD = "Kisan@9860"
+MHADA_PAN = "BFBPJ6615K"   # PAN Number
+MHADA_PASSWORD = "Kisan@9860"  # Portal Password
 EMAIL_FROM = "sachinjundharecloud909@gmail.com"
 EMAIL_FROM_APP_PASSWORD = "Cloud@7878"  # ⚠️ Use Gmail App Password
 EMAIL_TO = "sachinjundhare909@gmail.com"
@@ -41,6 +41,7 @@ def send_email_alert(new_items):
 
 # ---- Parse scheme list ----
 def parse_scheme_list(page_content):
+    # Example: match scheme names from HTML
     return re.findall(r"PB_01_01[^<]+", page_content)
 
 
@@ -52,24 +53,24 @@ def detect_new_items(old_list, new_list):
 # ---- Login & Scrape ----
 async def login_and_scrape(page):
     print("🌐 Opening login page...")
-    await page.goto(LOGIN_URL, timeout=10000)
+    await page.goto(LOGIN_URL, timeout=20000)
 
-    # Wait and fill PAN + Password
-    await page.wait_for_selector("input[formcontrolname='pan']", timeout=10000)
-    await page.fill("input[formcontrolname='pan']", MHADA_PAN)
-    await page.fill("input[formcontrolname='password']", MHADA_PASSWORD)
+    # Fill PAN and Password fields
+    await page.wait_for_selector("input[type='text'][maxlength='10']", timeout=20000)
+    await page.fill("input[type='text'][maxlength='10']", MHADA_PAN)
+    await page.fill("input[type='password']", MHADA_PASSWORD)
 
-    # Click Login
-    await page.click("button:has-text('Login')")
+    # Click Login button
+    await page.click("button[type='submit']")
     print("🔑 Submitted login form.")
 
     # Give time for navigation
     await page.wait_for_timeout(5000)
 
-    # TODO: Adjust navigation clicks as per actual site flow
+    # Navigate to Pune schemes
     try:
-        await page.click("text=Pune", timeout=1000)
-        await page.click("text=PB_01_01 FCFS 20 percent Schemes", timeout=1000)
+        await page.click("text=Pune", timeout=10000)
+        await page.click("text=PB_01_01 FCFS 20 percent Schemes", timeout=10000)
     except TimeoutError:
         print("⚠️ Could not navigate to Pune/target scheme.")
 
