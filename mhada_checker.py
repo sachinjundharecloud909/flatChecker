@@ -63,6 +63,7 @@ async def login_and_scrape(page):
     await page.wait_for_timeout(5000)
     print("starting pan and password adding...")
     # Fill PAN and Password fields
+    await page.wait_for_selector("input.input-otp", timeout=10000)  # waits up to 10 seconds
     await page.fill("input.input-otp", MHADA_PAN)
     print("pan card added...")
     await page.fill("input[type='password']", MHADA_PASSWORD)
