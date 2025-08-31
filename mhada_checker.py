@@ -63,9 +63,11 @@ async def login_and_scrape(page):
     await page.wait_for_timeout(5000)
     print("starting pan and password adding...")
     # Fill PAN and Password fields
-    await page.locator("input[type='text']",MHADA_PAN)
+    await page.fill("input.input-otp", MHADA_PAN)
+    print("pan card added...")
     await page.fill("input[type='password']", MHADA_PASSWORD)
-
+    print("password added...")
+    
     # Click Login button
     await page.click("button[type='submit']")
     print("🔑 Submitted login form.")
