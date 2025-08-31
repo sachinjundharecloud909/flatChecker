@@ -52,8 +52,14 @@ def detect_new_items(old_list, new_list):
 
 # ---- Login & Scrape ----
 async def login_and_scrape(page):
-    print("🌐 Opening login page...")
-    await page.goto("https://bookmyhome.mhada.gov.in/signIn")
+    print("Opening login page...")
+    # Add timeout and wait_until
+    await page.goto(
+        "https://bookmyhome.mhada.gov.in/signIn",
+        timeout=50000,                     # wait up to 60s
+        wait_until="domcontentloaded"      # stop waiting once DOM is ready
+    )
+    await page.wait_for_load_state("networkidle")
     print("after login page opened...")
     # Fill PAN and Password fields
     await page.wait_for_selector("input[type='text'][maxlength='10']", timeout=20000)
