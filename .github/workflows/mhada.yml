@@ -2,7 +2,7 @@ name: MHADA Flat Checker
 
 on:
   schedule:
-    - cron: "0 * * * *"   # runs every hour
+    - cron: "*/10 * * * *"   # Runs every 10 minutes
   workflow_dispatch:      # manual run button
 
 jobs:
