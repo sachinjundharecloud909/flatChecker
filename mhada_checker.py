@@ -2,21 +2,22 @@ import re
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import asyncio
 
 # ------------------ CONFIG ------------------
 MHADA_USERNAME = "BFBPJ6615K"
 MHADA_PASSWORD = "Kisan@9860"
 EMAIL_FROM = "sachinjundharecloud909@gmail.com"
-EMAIL_FROM_APP_PASSWORD = "Cloud@7878"
+EMAIL_FROM_APP_PASSWORD = "Cloud@7878"  # ⚠️ Use Gmail App Password
 EMAIL_TO = "sachinjundhare909@gmail.com"
 LOGIN_URL = "https://bookmyhome.mhada.gov.in/signIn"
 # --------------------------------------------
 
-# Try importing Playwright (only available locally, not in this sandbox)
 try:
-    from playwright.async_api import async_playwright
+    from playwright.async_api import async_playwright, TimeoutError
 except ImportError:
     async_playwright = None
+
 
 # ---- Email function ----
 def send_email_alert(new_items):
@@ -37,14 +38,45 @@ def send_email_alert(new_items):
     except Exception as e:
         print("❌ Email failed:", e)
 
+
 # ---- Parse scheme list ----
 def parse_scheme_list(page_content):
     # Example: match scheme names from HTML
     return re.findall(r"PB_01_01[^<]+", page_content)
 
+
 # ---- Diff check ----
 def detect_new_items(old_list, new_list):
     return [item for item in new_list if item not in old_list]
+
+
+# ---- Login & Scrape ----
+async def login_and_scrape(page):
+    print("🌐 Opening login page...")
+    await page.goto(LOGIN_URL, timeout=60000)
+
+    # Wait and fill
+    await page.wait_for_selector("#username", timeout=60000)
+    await page.fill("#username", MHADA_USERNAME)
+    await page.fill("#password", MHADA_PASSWORD)
+
+    await page.click("button[type='submit']")
+    print("🔑 Submitted login form.")
+
+    # Give time for navigation
+    await page.wait_for_timeout(5000)
+
+    # TODO: Adjust navigation clicks as per actual site flow
+    try:
+        await page.click("text=Pune", timeout=10000)
+        await page.click("text=PB_01_01 FCFS 20 percent Schemes", timeout=10000)
+    except TimeoutError:
+        print("⚠️ Could not navigate to Pune/target scheme.")
+
+    # Scrape page
+    content = await page.content()
+    return parse_scheme_list(content)
+
 
 # ---- Main Scraper ----
 async def run_checker():
@@ -54,52 +86,48 @@ async def run_checker():
         return
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
+        browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
         page = await browser.new_page()
 
-        # 1. Login
-        await page.goto(LOGIN_URL)
-        await page.fill("input[name='username']", MHADA_USERNAME)
-        await page.fill("input[name='password']", MHADA_PASSWORD)
-        await page.click("button[type='submit']")
+        try:
+            new_list = await login_and_scrape(page)
+        except Exception as e:
+            print("⚠️ First login attempt failed, retrying once...", e)
+            await page.close()
+            page = await browser.new_page()
+            new_list = await login_and_scrape(page)
 
-        # 2. Navigate (adjust selectors as per site)
-        await page.click("text=Apply")
-        await page.click("text=Pune")
-        await page.click("text=PB_01_01 FCFS 20 percent Schemes")
-        await page.click("text=Apply")
-
-        # 3. Scrape scheme list
-        content = await page.content()
-        new_list = parse_scheme_list(content)
-
-        # 4. Load old list from file
+        # Load old list
         try:
             with open("schemes_snapshot.txt", "r") as f:
                 old_list = f.read().splitlines()
         except FileNotFoundError:
             old_list = []
 
-        # 5. Detect changes
+        # Detect changes
         new_items = detect_new_items(old_list, new_list)
         if new_items:
             send_email_alert(new_items)
 
-        # 6. Save snapshot
+        # Save snapshot
         with open("schemes_snapshot.txt", "w") as f:
             f.write("\n".join(new_list))
 
         await browser.close()
 
+
 # ---- Test Mode (no Playwright) ----
 def test_mode():
     old_list = ["PB_01_01 FCFS 20 percent Schemes - A"]
-    new_html = "<div>PB_01_01 FCFS 20 percent Schemes - A</div><div>PB_01_01 FCFS 20 percent Schemes - B</div>"
+    new_html = """
+    <div>PB_01_01 FCFS 20 percent Schemes - A</div>
+    <div>PB_01_01 FCFS 20 percent Schemes - B</div>
+    """
     new_list = parse_scheme_list(new_html)
     new_items = detect_new_items(old_list, new_list)
     assert new_items == ["PB_01_01 FCFS 20 percent Schemes - B"]
     print("✅ Test mode passed. Detected new:", new_items)
 
+
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(run_checker())
