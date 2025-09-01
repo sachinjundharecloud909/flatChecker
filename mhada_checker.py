@@ -8,7 +8,7 @@ import asyncio
 MHADA_PAN = "BFBPJ6615K"   # PAN Number
 MHADA_PASSWORD = "Kisan@9860"  # Portal Password
 EMAIL_FROM = "sachinjundharecloud909@gmail.com"
-EMAIL_FROM_APP_PASSWORD = "Cloud@7878"  # ⚠️ Use Gmail App Password
+EMAIL_FROM_APP_PASSWORD = "spdj nenh cyhb svbm"  # ⚠️ Use Gmail App Password
 EMAIL_TO = "sachinjundhare909@gmail.com"
 LOGIN_URL = "https://bookmyhome.mhada.gov.in/"
 # --------------------------------------------
