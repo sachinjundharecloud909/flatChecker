@@ -98,7 +98,7 @@ async def login_and_scrape(page):
     await page.wait_for_timeout(5000)
 
     print("opening PB_01_01 - FCFS 20 percent Schemes")
-    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-select-lottery/div/div/div/div/div/div/div[1]/div/div[2]/div[2]/div[4]/button[2]/span")
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-select-lottery/div/div/div/div/div/div/div[1]/div/div[1]/button[2]/span")
     print("percent scheme opened")
     await page.wait_for_timeout(5000)
 
