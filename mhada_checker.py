@@ -105,12 +105,12 @@ async def login_and_scrape(page):
     buttons = await page.query_selector_all("span.text-white")
     print("Total SELECT LOCATION buttons by selector:", len(buttons))
 
-    buttons = await page.query_selector_all("xpath=//span[normalize-space(text())='SELECT LOCATION']")
-    print("Total SELECT LOCATION buttons by text:", len(buttons))
+    buttons1 = await page.query_selector_all("xpath=//span[normalize-space(text())='SELECT LOCATION']")
+    print("Total SELECT LOCATION buttons by text:", len(buttons1))
 
     # Scrape page
-    content = await page.content()
-    return parse_scheme_list(content)
+    # content = await page.content()
+    return buttons
 
 
 # ---- Main Scraper ----
@@ -124,8 +124,8 @@ async def run_checker():
         page = await browser.new_page()
         print("Chrome opened..")
         try:
-            new_list = await login_and_scrape(page)
-            print("New list:", new_list)
+            new_buttons = await login_and_scrape(page)
+            print("new_buttons:", new_buttons)
         except Exception as e:
             print("First login attempt failed, retrying once...", e)
             await page.close()
@@ -135,19 +135,19 @@ async def run_checker():
         # Load old list
         try:
             with open("schemes_snapshot.txt", "r") as f:
-                old_list = f.read().splitlines()
-                print("Old list:", old_list)
+                old_buttons = f.read()
+                print("old buttons:", old_buttons)
         except FileNotFoundError:
             old_list = []
 
         # Detect changes
-        new_items = detect_new_items(old_list, new_list)
+        new_items = detect_new_items(old_buttons, new_buttons)
         if new_items:
             send_email_alert(new_items)
 
         # Save snapshot
         with open("schemes_snapshot.txt", "w") as f:
-            f.write("\n".join(new_list))
+            f.write("\n".join(new_buttons))
 
         await browser.close()
 
