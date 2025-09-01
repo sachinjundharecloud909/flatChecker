@@ -141,8 +141,13 @@ async def run_checker():
             old_list = []
 
         # Detect changes
+        if old_buttons < new_buttons
+            print("new flats available...")
+        
         new_items = detect_new_items(old_buttons, new_buttons)
+        print("new_items:", new_items)
         if new_items:
+            print("Sending Alert..")
             send_email_alert(new_items)
 
         # Save snapshot
