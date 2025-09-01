@@ -63,18 +63,25 @@ async def login_and_scrape(page):
     await page.wait_for_timeout(5000)
     await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-landing/div/div[2]/div[3]/div/button[1]")
     print("signup form opened.")
+    await page.wait_for_timeout(5000)
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-signup/div/div[2]/div/div[3]/a")
+    print("login form opened.")
     
     print("starting pan and password adding...")
     # Fill PAN and Password fields
-    await page.wait_for_selector("input.input-otp", timeout=10000)  # waits up to 10 seconds
-    await page.fill("input.input-otp", MHADA_PAN)
+    await page.wait_for_selector("xpath=/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[1]/div[2]/input", timeout=5000)
+    await page.fill("xpath=/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[1]/div[2]/input", MHADA_PAN)
+
     print("pan card added...")
-    await page.fill("input[type='password']", MHADA_PASSWORD)
+    
+    await page.wait_for_selector("xpath=/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[2]/div[2]/input", timeout=5000)
+    await page.fill("xpath=/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[2]/div[2]/input", MHADA_PASSWORD)
+    
     print("password added...")
     
     # Click Login button
-    await page.click("button[type='submit']")
-    print("🔑 Submitted login form.")
+    await page.click("/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[4]/div[1]/button")
+    print("Submitted login form.")
 
     # Give time for navigation
     await page.wait_for_timeout(5000)
