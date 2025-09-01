@@ -80,7 +80,7 @@ async def login_and_scrape(page):
     print("password added...")
     await page.wait_for_timeout(5000)
     # Click Login button
-    await page.click("/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[4]/div[1]/button")
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-login/div/div[2]/div/div[3]/div[4]/div[1]/button")
     print("Submitted login form.")
     
     # Give time for navigation
@@ -88,17 +88,17 @@ async def login_and_scrape(page):
     print("profile form start")
     
     # profile
-    await page.click("/html/body/app-root/ion-app/div/ion-content/app-profile-new/div/div[2]/button[2]")
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-profile-new/div/div[2]/button[2]")
     print("clicked on apply..")
     await page.wait_for_timeout(5000)
     
     # Navigate to Pune schemes
-    await page.click("/html/body/app-root/ion-app/div/ion-content/app-select-board/div/div[2]/div/div[2]/div/div/p")
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-select-board/div/div[2]/div/div[2]/div/div/p")
     print("Pune schemes opened")
     await page.wait_for_timeout(5000)
 
     print("opening PB_01_01 - FCFS 20 percent Schemes")
-    await page.click("/html/body/app-root/ion-app/div/ion-content/app-select-lottery/div/div/div/div/div/div/div[1]/div/div[2]/div[2]/div[4]/button[2]/span")
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-select-lottery/div/div/div/div/div/div/div[1]/div/div[2]/div[2]/div[4]/button[2]/span")
     print("percent scheme opened")
     await page.wait_for_timeout(5000)
 
