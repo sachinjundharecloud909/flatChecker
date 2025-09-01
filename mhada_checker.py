@@ -102,9 +102,11 @@ async def login_and_scrape(page):
     print("percent scheme opened")
     await page.wait_for_timeout(10000)
 
+    buttons = await page.query_selector_all("span.text-white")
+    print("Total SELECT LOCATION buttons:", len(buttons))
+
     # Scrape page
     content = await page.content()
-    print("Content:", content)
     return parse_scheme_list(content)
 
 
