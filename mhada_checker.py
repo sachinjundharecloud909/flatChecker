@@ -10,7 +10,7 @@ MHADA_PASSWORD = "Kisan@9860"  # Portal Password
 EMAIL_FROM = "sachinjundharecloud909@gmail.com"
 EMAIL_FROM_APP_PASSWORD = "Cloud@7878"  # ⚠️ Use Gmail App Password
 EMAIL_TO = "sachinjundhare909@gmail.com"
-LOGIN_URL = "https://bookmyhome.mhada.gov.in/signIn"
+LOGIN_URL = "https://bookmyhome.mhada.gov.in/"
 # --------------------------------------------
 
 try:
@@ -52,15 +52,18 @@ def detect_new_items(old_list, new_list):
 
 # ---- Login & Scrape ----
 async def login_and_scrape(page):
-    print("Opening login page...")
+    print("Opening home page...")
     # Add timeout and wait_until
     await page.goto(
-        "https://bookmyhome.mhada.gov.in/signIn",
+        "https://bookmyhome.mhada.gov.in/",
         timeout=50000,                     # wait up to 60s
         wait_until="domcontentloaded"      # stop waiting once DOM is ready
     )
-    print("after login page opened...")
+    print("after home page opened...")
     await page.wait_for_timeout(5000)
+    await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-landing/div/div[2]/div[3]/div/button[1]")
+    print("signup form opened.")
+    
     print("starting pan and password adding...")
     # Fill PAN and Password fields
     await page.wait_for_selector("input.input-otp", timeout=10000)  # waits up to 10 seconds
