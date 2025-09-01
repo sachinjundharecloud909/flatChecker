@@ -102,15 +102,13 @@ async def login_and_scrape(page):
     print("percent scheme opened")
     await page.wait_for_timeout(10000)
 
-    buttons = await page.query_selector_all("span.text-white")
-    print("Total SELECT LOCATION buttons by selector:", len(buttons))
+    # buttons = await page.query_selector_all("span.text-white")
+    # print("Total SELECT LOCATION buttons by selector:", len(buttons))
 
-    buttons1 = await page.query_selector_all("xpath=//span[normalize-space(text())='SELECT LOCATION']")
-    print("Total SELECT LOCATION buttons by text:", len(buttons1))
-
-    # Scrape page
-    # content = await page.content()
-    return buttons
+    buttons = await page.query_selector_all("xpath=//span[normalize-space(text())='SELECT LOCATION']")
+    print("Total SELECT LOCATION buttons by text:", len(buttons))
+    
+    return len(buttons)
 
 
 # ---- Main Scraper ----
@@ -135,20 +133,22 @@ async def run_checker():
         # Load old list
         try:
             with open("schemes_snapshot.txt", "r") as f:
-                old_buttons = f.read()
+                # old_buttons = f.read()
+                old_buttons = int(f.read().strip())
                 print("old buttons:", old_buttons)
         except FileNotFoundError:
             old_list = []
 
         # Detect changes
-        if old_buttons < new_buttons:
-            print("new flats available...")
-        
         new_items = detect_new_items(old_buttons, new_buttons)
         print("new_items:", new_items)
         if new_items:
             print("Sending Alert..")
             send_email_alert(new_items)
+
+        # Detect changes
+        if old_buttons < new_buttons:
+            print("new flats available...")
 
         # Save snapshot
         with open("schemes_snapshot.txt", "w") as f:
