@@ -153,8 +153,8 @@ async def run_checker():
         
 
         # Save snapshot
-        with open("schemes_snapshot.txt", "w") as f:
-            f.write("\n".join(new_buttons))
+        # with open("schemes_snapshot.txt", "w") as f:
+        #     f.write("\n".join(new_buttons))
 
         await browser.close()
 
