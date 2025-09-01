@@ -100,28 +100,29 @@ async def login_and_scrape(page):
     print("opening PB_01_01 - FCFS 20 percent Schemes")
     await page.click("xpath=/html/body/app-root/ion-app/div/ion-content/app-select-lottery/div/div/div/div/div/div/div[1]/div/div[1]/button[2]/span")
     print("percent scheme opened")
-    await page.wait_for_timeout(5000)
+    await page.wait_for_timeout(10000)
 
     # Scrape page
     content = await page.content()
+    print("Content:", content)
     return parse_scheme_list(content)
 
 
 # ---- Main Scraper ----
 async def run_checker():
     if async_playwright is None:
-        print("⚠️ Playwright not available. Running in test mode.")
-        test_mode()
+        print("Playwright not available..")
         return
-
+    print("Starting script..")
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True, args=["--no-sandbox"])
         page = await browser.new_page()
-
+        print("Chrome opened..")
         try:
             new_list = await login_and_scrape(page)
+            print("New list:", new_list)
         except Exception as e:
-            print("⚠️ First login attempt failed, retrying once...", e)
+            print("First login attempt failed, retrying once...", e)
             await page.close()
             page = await browser.new_page()
             new_list = await login_and_scrape(page)
@@ -130,6 +131,7 @@ async def run_checker():
         try:
             with open("schemes_snapshot.txt", "r") as f:
                 old_list = f.read().splitlines()
+                print("Old list:", old_list)
         except FileNotFoundError:
             old_list = []
 
@@ -143,19 +145,6 @@ async def run_checker():
             f.write("\n".join(new_list))
 
         await browser.close()
-
-
-# ---- Test Mode (no Playwright) ----
-def test_mode():
-    old_list = ["PB_01_01 FCFS 20 percent Schemes - A"]
-    new_html = """
-    <div>PB_01_01 FCFS 20 percent Schemes - A</div>
-    <div>PB_01_01 FCFS 20 percent Schemes - B</div>
-    """
-    new_list = parse_scheme_list(new_html)
-    new_items = detect_new_items(old_list, new_list)
-    assert new_items == ["PB_01_01 FCFS 20 percent Schemes - B"]
-    print("✅ Test mode passed. Detected new:", new_items)
 
 
 if __name__ == "__main__":
