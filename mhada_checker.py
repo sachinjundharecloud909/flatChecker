@@ -22,7 +22,8 @@ except ImportError:
 # ---- Email function ----
 def send_email_alert(new_items):
     subject = "MHADA Alert: New Flats Detected"
-    body = "New flats/schemes have been added:\n" + "\n".join(new_items)
+    # body = "New flats/schemes have been added:\n" + "\n".join(new_items)
+    body = f"New flats/schemes have been added: {new_items}"
 
     msg = MIMEMultipart()
     msg["From"] = EMAIL_FROM
@@ -34,9 +35,9 @@ def send_email_alert(new_items):
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_FROM, EMAIL_FROM_APP_PASSWORD)
             server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
-        print("✅ Email sent successfully!")
+        print("Email sent successfully!")
     except Exception as e:
-        print("❌ Email failed:", e)
+        print("Email failed:", e)
 
 
 # ---- Parse scheme list ----
@@ -141,7 +142,7 @@ async def run_checker():
 
         # Detect changes
         if old_buttons < new_buttons:
-            print("New flats available...Sending Alert")
+            print("Sending Alert...New flats available are:", new_buttons - old_buttons)
             send_email_alert(new_buttons - old_buttons)
             
         # new_items = detect_new_items(old_buttons, new_buttons)
