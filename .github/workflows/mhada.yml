@@ -24,6 +24,10 @@ jobs:
           
       - name: Run script
         env:
-          USER123: ${{ secrets.USER123 }}
+          MHADA_PAN: ${{ secrets.MHADA_PAN }}
+          MHADA_PASSWORD: ${{ secrets.MHADA_PASSWORD }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_FROM_APP_PASSWORD: ${{ secrets.EMAIL_FROM_APP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          LOGIN_URL: ${{ secrets.LOGIN_URL }}
         run: python mhada_checker.py
-      
