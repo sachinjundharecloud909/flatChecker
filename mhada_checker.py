@@ -1,4 +1,5 @@
 import re
+import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -13,6 +14,8 @@ EMAIL_TO = "sachinjundhare909@gmail.com"
 LOGIN_URL = "https://bookmyhome.mhada.gov.in/"
 # --------------------------------------------
 
+username = os.getenv("USER123")
+print(f"Username is: {username}") 
 try:
     from playwright.async_api import async_playwright, TimeoutError
 except ImportError:
