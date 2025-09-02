@@ -6,16 +6,14 @@ from email.mime.multipart import MIMEMultipart
 import asyncio
 
 # ------------------ CONFIG ------------------
-MHADA_PAN = "BFBPJ6615K"   # PAN Number
-MHADA_PASSWORD = "Kisan@9860"  # Portal Password
-EMAIL_FROM = "sachinjundharecloud909@gmail.com"
-EMAIL_FROM_APP_PASSWORD = "spdj nenh cyhb svbm"  # ⚠️ Use Gmail App Password
-EMAIL_TO = "sachinjundhare909@gmail.com"
-LOGIN_URL = "https://bookmyhome.mhada.gov.in/"
+MHADA_PAN = os.getenv("MHADA_PAN")
+MHADA_PASSWORD = os.getenv("MHADA_PASSWORD")
+EMAIL_FROM = os.getenv("EMAIL_FROM")
+EMAIL_FROM_APP_PASSWORD = os.getenv("EMAIL_FROM_APP_PASSWORD")
+EMAIL_TO = os.getenv("EMAIL_TO")
+LOGIN_URL = os.getenv("LOGIN_URL")
 # --------------------------------------------
 
-username = os.getenv("USER123")
-print(f"Username is: {username}") 
 try:
     from playwright.async_api import async_playwright, TimeoutError
 except ImportError:
