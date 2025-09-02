@@ -22,11 +22,8 @@ jobs:
           pip install playwright
           playwright install chromium
           
-      - uses: actions/checkout@v4
       - name: Run script
         env:
           USER123: ${{ secrets.USER123 }}
-
-      - name: Run script
         run: python mhada_checker.py
       
