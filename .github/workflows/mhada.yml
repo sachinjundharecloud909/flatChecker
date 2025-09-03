@@ -28,6 +28,7 @@ jobs:
           MHADA_PASSWORD: ${{ secrets.MHADA_PASSWORD }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_FROM_APP_PASSWORD: ${{ secrets.EMAIL_FROM_APP_PASSWORD }}
-          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_TO_SCHIN: ${{ secrets.EMAIL_TO_SCHIN }}
+          EMAIL_TO_JANA: ${{ secrets.EMAIL_TO_JANA }}
           LOGIN_URL: ${{ secrets.LOGIN_URL }}
         run: python mhada_checker.py
