@@ -10,8 +10,10 @@ MHADA_PAN = os.getenv("MHADA_PAN")
 MHADA_PASSWORD = os.getenv("MHADA_PASSWORD")
 EMAIL_FROM = os.getenv("EMAIL_FROM")
 EMAIL_FROM_APP_PASSWORD = os.getenv("EMAIL_FROM_APP_PASSWORD")
-EMAIL_TO = os.getenv("EMAIL_TO")
+EMAIL_TO_SCHIN = os.getenv("EMAIL_TO_SCHIN")
+EMAIL_TO_JANA = os.getenv("EMAIL_TO_JANA")
 LOGIN_URL = os.getenv("LOGIN_URL")
+
 # --------------------------------------------
 
 try:
@@ -28,15 +30,26 @@ def send_email_alert(new_items):
 
     msg = MIMEMultipart()
     msg["From"] = EMAIL_FROM
-    msg["To"] = EMAIL_TO
+    msg["To"] = EMAIL_TO_SCHIN
     msg["Subject"] = subject
     msg.attach(MIMEText(body, "plain"))
+
+    msg1 = MIMEMultipart()
+    msg1["From"] = EMAIL_FROM
+    msg1["To"] = EMAIL_TO_JANA
+    msg1["Subject"] = subject
+    msg1.attach(MIMEText(body, "plain"))
 
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(EMAIL_FROM, EMAIL_FROM_APP_PASSWORD)
-            server.sendmail(EMAIL_FROM, EMAIL_TO, msg.as_string())
-        print("Email sent successfully!")
+            server.sendmail(EMAIL_FROM, EMAIL_TO_SCHIN, msg.as_string())
+        print("Email sent successfully to schin!")
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_FROM, EMAIL_FROM_APP_PASSWORD)
+            server.sendmail(EMAIL_FROM, EMAIL_TO_JANA, msg1.as_string())
+        print("Email sent successfully to jna!")
     except Exception as e:
         print("Email failed:", e)
 
