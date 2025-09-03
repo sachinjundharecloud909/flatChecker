@@ -1,4 +1,4 @@
-name: MHADA Flat Checker
+name: Flat Checker
 
 on:
   schedule:
