@@ -123,6 +123,13 @@ async def login_and_scrape(page):
     # buttons = await page.query_selector_all("xpath=//span[normalize-space(text())=' SELECT LOCATION ']")
     buttons = await page.query_selector_all("button.select-location-btn")
     print("Total SELECT LOCATION buttons by text:", len(buttons))
+
+    count = 0
+for frame in page.frames:
+    els = await frame.query_selector_all("button.select-location-btn")
+    print(f"Frame {frame.url} → {len(els)} buttons")
+    count += len(els)
+print("Total SELECT LOCATION buttons (all frames):", count)
     
     return len(buttons)
 
