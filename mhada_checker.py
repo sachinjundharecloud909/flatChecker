@@ -120,7 +120,8 @@ async def login_and_scrape(page):
     # buttons = await page.query_selector_all("span.text-white")
     # print("Total SELECT LOCATION buttons by selector:", len(buttons))
 
-    buttons = await page.query_selector_all("xpath=//span[normalize-space(text())=' SELECT LOCATION ']")
+    # buttons = await page.query_selector_all("xpath=//span[normalize-space(text())=' SELECT LOCATION ']")
+    buttons = await page.query_selector_all("button.select-location-btn")
     print("Total SELECT LOCATION buttons by text:", len(buttons))
     
     return len(buttons)
