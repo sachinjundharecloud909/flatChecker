@@ -2,7 +2,7 @@ name: Flat Checker
 
 on:
   schedule:
-    - cron: "*/10 * * * *"   # Runs every 10 minutes
+    - cron: "*/30 * * * *"   # Runs every 10 minutes
   workflow_dispatch:      # manual run button
 
 jobs:
