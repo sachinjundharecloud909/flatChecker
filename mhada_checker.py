@@ -117,19 +117,30 @@ async def login_and_scrape(page):
     print("percent scheme opened")
     await page.wait_for_timeout(10000)
 
-    # buttons = await page.query_selector_all("span.text-white")
-    # print("Total SELECT LOCATION buttons by selector:", len(buttons))
-
     # buttons = await page.query_selector_all("xpath=//span[normalize-space(text())=' SELECT LOCATION ']")
-    buttons = await page.query_selector_all("button.select-location-btn")
-    print("Total SELECT LOCATION buttons by text:", len(buttons))
+    # buttons = await page.query_selector_all("button.select-location-btn")
+    # print("Total SELECT LOCATION buttons by text:", len(buttons))
 
-    count = 0
-    for frame in page.frames:
-        els = await frame.query_selector_all("button.select-location-btn")
-        print(f"Frame {frame.url} → {len(els)} buttons")
-        count += len(els)
-    print("Total SELECT LOCATION buttons (all frames):", count)
+    ############################################
+    # wait for everything to load
+    await page.wait_for_load_state("networkidle")
+    
+    # count at start
+    buttons = await page.query_selector_all("button.select-location-btn")
+    print("Initial count:", len(buttons))
+    
+    # scroll gradually down to trigger lazy loading
+    for _ in range(10):
+        await page.mouse.wheel(0, 2000)
+        await page.wait_for_timeout(1000)
+    
+    # allow JS to render new buttons
+    await page.wait_for_timeout(2000)
+    
+    # count again
+    buttons = await page.query_selector_all("button.select-location-btn")
+    print("After scroll count:", len(buttons))
+    ############################################
     
     return len(buttons)
 
