@@ -148,8 +148,20 @@ async def login_and_scrape(page):
     
     # Count occurrences (case-insensitive)
     count = page_text.lower().count(search_text.lower())
+    print(f"1st '{search_text}' found {count} times on the page")
+    #############
+    elements = await page.query_selector_all(
+    "xpath=//*[normalize-space(.)='No Of Units']"
+    )
+    print("2nd Exact element matches:", len(elements))
+    ############
+    elements = await page.query_selector_all(
+        "xpath=//*[contains(normalize-space(.), 'No Of Units')]"
+    )
+    print("3rdElements containing text:", len(elements))
+    ###########
+
     
-    print(f"'{search_text}' found {count} times on the page")
     return count
 
 
