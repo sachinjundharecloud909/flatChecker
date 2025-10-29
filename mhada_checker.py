@@ -122,27 +122,35 @@ async def login_and_scrape(page):
     # print("Total SELECT LOCATION buttons by text:", len(buttons))
 
     ############################################
-    # wait for everything to load
-    await page.wait_for_load_state("networkidle")
+    # # wait for everything to load
+    # await page.wait_for_load_state("networkidle")
     
-    # count at start
-    buttons = await page.query_selector_all("button.select-location-btn")
-    print("Initial count:", len(buttons))
+    # # count at start
+    # buttons = await page.query_selector_all("button.select-location-btn")
+    # print("Initial count:", len(buttons))
     
-    # scroll gradually down to trigger lazy loading
-    for _ in range(10):
-        await page.mouse.wheel(0, 2000)
-        await page.wait_for_timeout(1000)
+    # # scroll gradually down to trigger lazy loading
+    # for _ in range(10):
+    #     await page.mouse.wheel(0, 2000)
+    #     await page.wait_for_timeout(1000)
     
-    # allow JS to render new buttons
-    await page.wait_for_timeout(2000)
+    # # allow JS to render new buttons
+    # await page.wait_for_timeout(2000)
     
-    # count again
-    buttons = await page.query_selector_all("button.select-location-btn")
-    print("After scroll count:", len(buttons))
+    # # count again
+    # buttons = await page.query_selector_all("button.select-location-btn")
+    # print("After scroll count:", len(buttons))
     ############################################
+    search_text = "No Of Units"
+
+    # Extract all visible text from the page
+    page_text = await page.inner_text("body")
     
-    return len(buttons)
+    # Count occurrences (case-insensitive)
+    count = page_text.lower().count(search_text.lower())
+    
+    print(f"'{search_text}' found {count} times on the page")
+    return count
 
 
 # ---- Main Scraper ----
