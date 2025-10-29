@@ -155,13 +155,21 @@ async def login_and_scrape(page):
     # )
     # print("2nd Exact element matches:", len(elements))
     ############
-    # ---- Count 'No Of Units' occurrences ----
     print("Counting 'No Of Units' texts...")
-    content = await page.content()
-    count = len(re.findall(r"No\s*Of\s*Units", content, flags=re.IGNORECASE))
-    print(f"Total 'No Of Units' found: {count}")
+
+    # Wait for the text to be present in DOM
+    await page.wait_for_selector("xpath=//*[contains(., 'No Of Units')]", timeout=30000)
+    
+    # Query all visible elements containing that text
+    elements = await page.query_selector_all(
+        "xpath=//*[contains(normalize-space(.), 'No Of Units')]"
+    )
+    
+    count = len(elements)
+    print(f" Total 'No Of Units' found: {count}")
     
     return count
+
 
 
 
