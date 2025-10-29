@@ -155,14 +155,14 @@ async def login_and_scrape(page):
     # )
     # print("2nd Exact element matches:", len(elements))
     ############
+    # ---- Count 'No Of Units' occurrences ----
     print("Counting 'No Of Units' texts...")
-    elements = await page.query_selector_all(
-        "xpath=//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'no of units')]"
-    )
-    count = len(elements)
+    content = await page.content()
+    count = len(re.findall(r"No\s*Of\s*Units", content, flags=re.IGNORECASE))
     print(f"Total 'No Of Units' found: {count}")
     
     return count
+
 
 
 # ---- Main Scraper ----
