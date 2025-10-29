@@ -159,11 +159,10 @@ async def login_and_scrape(page):
         "xpath=//*[contains(normalize-space(.), 'No Of Units')]"
     )
     print("3rdElements containing text:", len(elements))
-    ###########
-    elements1 = await page.query_selector_all(
-        "xpath=//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'no of units')]"
-    )
-    print('Elements1 containing "No Of Units" (case-insensitive):', len(elements1))
+    #######
+    elements2 = await page.query_selector_all("xpath=//*[contains(normalize-space(.), 'No Of Units')]")
+    print("Elements containing text:", len(elements2))
+    ######
 
     
     return elements1
