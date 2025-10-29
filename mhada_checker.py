@@ -141,28 +141,32 @@ async def login_and_scrape(page):
     # buttons = await page.query_selector_all("button.select-location-btn")
     # print("After scroll count:", len(buttons))
     ############################################
-    search_text = "No Of Units"
+    # search_text = "No Of Units"
 
-    # Extract all visible text from the page
-    page_text = await page.inner_text("body")
+    # # Extract all visible text from the page
+    # page_text = await page.inner_text("body")
     
-    # Count occurrences (case-insensitive)
-    count = page_text.lower().count(search_text.lower())
-    print(f"1st '{search_text}' found {count} times on the page")
-    #############
-    elements = await page.query_selector_all(
-    "xpath=//*[normalize-space(.)='No Of Units']"
-    )
-    print("2nd Exact element matches:", len(elements))
+    # # Count occurrences (case-insensitive)
+    # count = page_text.lower().count(search_text.lower())
+    # print(f"1st '{search_text}' found {count} times on the page")
+    # #############
+    # elements = await page.query_selector_all(
+    # "xpath=//*[normalize-space(.)='No Of Units']"
+    # )
+    # print("2nd Exact element matches:", len(elements))
     ############
     elements = await page.query_selector_all(
         "xpath=//*[contains(normalize-space(.), 'No Of Units')]"
     )
     print("3rdElements containing text:", len(elements))
     ###########
+    elements1 = await page.query_selector_all(
+        "xpath=//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'no of units')]"
+    )
+    print('Elements1 containing "No Of Units" (case-insensitive):', len(elements1))
 
     
-    return count
+    return elements1
 
 
 # ---- Main Scraper ----
